@@ -4,12 +4,18 @@
 # PySide6.QtWidgets -> Onde estão os widgets do PySide6
 import sys
 
-from PySide6.QtWidgets import QApplication, QPushButton, QWidget, QGridLayout
+from PySide6.QtWidgets import (QApplication, QPushButton, QWidget, QMainWindow,
+                               QGridLayout)
 
 app = QApplication(sys.argv)
+window = QMainWindow()
+central_widget = QWidget()
+window.setCentralWidget(central_widget)
+window.setWindowTitle('Minha janela bonita')
 
-botao = QPushButton('Texto do botão')
-botao.setStyleSheet('font-size: 80px;')
+
+botao1 = QPushButton('Texto do botão')
+botao1.setStyleSheet('font-size: 80px;')
 
 botao2 = QPushButton('Botão 2')
 botao2.setStyleSheet('font-size: 40px;')
@@ -18,15 +24,30 @@ botao3 = QPushButton('Botão 3')
 botao3.setStyleSheet('font-size: 20px;')
 
 
-central_widget = QWidget()
-
 layout = QGridLayout()
 central_widget.setLayout(layout)
 
-layout.addWidget(botao, 1, 1, 1, 1)
+layout.addWidget(botao1, 1, 1, 1, 1)
 layout.addWidget(botao2, 1, 2, 1, 1)
 layout.addWidget(botao3, 3, 1, 1, 2)
 
 
-central_widget.show()
+def slot_examplo(status_bar):
+    status_bar.showMessage('O meu slot foi executado')
+
+
+# statusBar
+status_bar = window.statusBar()
+status_bar.showMessage('Mostrar mensagem na barra')
+
+# menuBar
+menu = window.menuBar()
+primeiro_menu = menu.addMenu('Primeiro menu')
+primeira_acao = primeiro_menu.addAction('Primeira ação')
+primeira_acao.triggered.connect(
+    lambda: slot_examplo(status_bar)
+)
+
+
+window.show()
 app.exec()  # O loop da aplicação
