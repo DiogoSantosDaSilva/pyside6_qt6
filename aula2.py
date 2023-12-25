@@ -4,6 +4,7 @@
 # PySide6.QtWidgets -> Onde estão os widgets do PySide6
 import sys
 
+from PySide6.QtCore import Slot
 from PySide6.QtWidgets import (QApplication, QPushButton, QWidget, QMainWindow,
                                QGridLayout)
 
@@ -32,8 +33,23 @@ layout.addWidget(botao2, 1, 2, 1, 1)
 layout.addWidget(botao3, 3, 1, 1, 2)
 
 
-def slot_examplo(status_bar):
-    status_bar.showMessage('O meu slot foi executado')
+@Slot()
+def slot_example(status_bar):
+    def inner():
+        status_bar.showMessage('O meu slot foi executado')
+    return inner
+
+
+@Slot()
+def outro_slot(checked):
+    print('Está marcado?', checked)
+
+
+@Slot()
+def terceiro_slot(action):
+    def inner():
+        outro_slot(action.isChecked())
+    return inner
 
 
 # statusBar
@@ -44,9 +60,14 @@ status_bar.showMessage('Mostrar mensagem na barra')
 menu = window.menuBar()
 primeiro_menu = menu.addMenu('Primeiro menu')
 primeira_acao = primeiro_menu.addAction('Primeira ação')
-primeira_acao.triggered.connect(
-    lambda: slot_examplo(status_bar)
-)
+primeira_acao.triggered.connect(slot_example(status_bar))
+
+segunda_action = primeiro_menu.addAction('Segunda ação')
+segunda_action.setCheckable(True)
+segunda_action.toggled.connect(outro_slot)
+segunda_action.hovered.connect(terceiro_slot(segunda_action))
+
+botao1.clicked.connect(terceiro_slot(segunda_action))
 
 
 window.show()
