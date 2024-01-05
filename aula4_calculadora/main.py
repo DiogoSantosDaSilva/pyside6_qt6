@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QApplication
 from PySide6.QtGui import QIcon
 from info import Info
 from display import Display
-from buttons import Button
+from buttons import ButtonsGrid
 from style import setupTheme
 from variables import WINDOW_ICON_PATH
 
@@ -22,14 +22,15 @@ if __name__ == '__main__':
 
     # Info
     info = Info('2.0 ^ 10.0 = 1024')
-    window.addToVLayout(info)
+    window.addWidgetToVLayout(info)
 
     # Display
     display = Display()
-    window.addToVLayout(display)
+    window.addWidgetToVLayout(display)
 
-    button = Button('Texto do botão')
-    window.addToVLayout(button)
+    # Grid
+    buttonsGrid = ButtonsGrid()
+    window.vLayout.addLayout(buttonsGrid)
 
     window.adjustFixedSize()
     window.show()
